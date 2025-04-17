@@ -8,14 +8,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
-
-# Gensim imports for Doc2Vec
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from gensim.utils import simple_preprocess
 
-###############################################################################
-# 1. Load GloVe vectors from a local file (download from Stanford if needed).
-###############################################################################
 def load_glove_embedding(file_path):
     """
     Loads GloVe vectors from a file and returns a dictionary
@@ -32,9 +27,7 @@ def load_glove_embedding(file_path):
             glove_dict[word] = vector
     return glove_dict
 
-###############################################################################
-# 2. GloVeVectorizer: Converts raw text -> average GloVe embedding
-###############################################################################
+# 2. GloVeVectorizer
 class GloveVectorizer(BaseEstimator, TransformerMixin):
     def __init__(self, glove_dict):
         """
@@ -67,10 +60,8 @@ class GloveVectorizer(BaseEstimator, TransformerMixin):
             X_emb.append(doc_vec)
         return np.array(X_emb)
 
-###############################################################################
-# 3. Doc2VecTransformer: Learns a Doc2Vec model over the training corpus, then
-#    infers vectors for any new documents.
-###############################################################################
+
+# 3. Doc2VecTransformer
 class Doc2VecTransformer(BaseEstimator, TransformerMixin):
     def __init__(self,
                  vector_size=100,
@@ -124,9 +115,8 @@ class Doc2VecTransformer(BaseEstimator, TransformerMixin):
             vectors.append(vec)
         return np.array(vectors)
 
-###############################################################################
-# 4. Load the 20 Newsgroups dataset and create train/dev/test splits
-###############################################################################
+
+# Load the 20 Newsgroups dataset and create train/dev/test splits
 train_data = fetch_20newsgroups(subset='train')
 test_data = fetch_20newsgroups(subset='test')
 
@@ -143,10 +133,8 @@ X_train_full, X_dev, y_train_full, y_dev = train_test_split(
 #print(f"Training size:   {len(X_train_full)}")
 #print(f"Development size:{len(X_dev)}")
 
-###############################################################################
-# 5. TF–IDF Pipeline Baseline with Fixed Classifier Parameter (C=1)
-#    We only tune the TfidfVectorizer hyperparams for fairness.
-###############################################################################
+
+# TF–IDF Pipeline Baseline with Fixed Classifier Parameter (C=1
 tfidf_pipeline = Pipeline([
     ('tfidf', TfidfVectorizer(stop_words='english')),
     ('clf', LogisticRegression(max_iter=1000, C=1))  # Fixed C=1
@@ -183,9 +171,8 @@ print("[TF–IDF Baseline] Test Accuracy:", accuracy_score(test_data.target, y_t
 print("Classification Report (TF–IDF - Test):")
 print(classification_report(test_data.target, y_test_pred))
 
-###############################################################################
-# 6. GloVe Pipeline Baseline with Fixed Classifier Parameter (C=1)
-###############################################################################
+
+# GloVe Pipeline Baseline with Fixed Classifier Parameter
 glove_dict = load_glove_embedding("glove.6B.300d.txt")  # path to your GloVe file
 
 glove_pipeline = make_pipeline(
@@ -208,10 +195,8 @@ print("[GloVe Baseline] Test Accuracy:", accuracy_score(test_data.target, y_test
 print("Classification Report (GloVe - Test):")
 print(classification_report(test_data.target, y_test_pred_glove))
 
-###############################################################################
+
 # 7. Doc2Vec Pipeline Baseline with Fixed Classifier Parameter (C=1)
-#    Demonstrates minimal tuning of Doc2Vec hyperparameters if desired.
-###############################################################################
 doc2vec_pipeline = Pipeline([
     ('doc2vec', Doc2VecTransformer()),  # The custom transformer
     ('clf', LogisticRegression(max_iter=1000, C=1))  # Fixed C=1
@@ -252,9 +237,9 @@ print(classification_report(test_data.target, y_test_pred_doc2vec))
 
 
 
-###############################################################################
-# 8. Hybrid Model with Pre-Tuned Parameters (No Grid Search)
-###############################################################################
+
+# Hybrid Model with Pre-Tuned Parameters (No Grid Search)
+
 from sklearn.pipeline import FeatureUnion
 
 # Get best parameters from individual models
