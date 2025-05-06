@@ -6,3 +6,4 @@ The txt file glove.6B.300d.txt for GloVe pretrain: https://www.kaggle.com/datase
 
 #### [Experiment Result Report/Analysis](https://docs.google.com/document/d/1Xvl7_Pytlbfx39syao71xVQ3SDIK5SNsmWX5Ann_Hvo/edit?usp=sharing)
 
+#### For more information, in-depth explanation, and analysis, please refer to this [Presentation Slides](https://github.com/DuoZhang0418/Lingua_Fusion_News_Classification/blob/main/LinguaFusion_presentation_slides.pdf).
