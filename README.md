@@ -1,5 +1,5 @@
 # LinguaFusion: Multi-Source Linguistic Fusion for News Classification
-## Pushing Accuracy Beyond TF-IDF with Interpretable Linguistic Features
+### Pushing Accuracy Beyond TF-IDF with Interpretable Linguistic Features
 
 The txt file glove.6B.300d.txt for GloVe pretrain: https://www.kaggle.com/datasets/thanakomsn/glove6b300dtxt/data 
 
